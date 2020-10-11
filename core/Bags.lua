@@ -217,6 +217,7 @@ do
 	function backpack:Sort()
 		PlaySound(SOUNDKIT.UI_BAG_SORTING_01)
 		SortBags()
+		C_Timer.After(1, function() addon:OpenBackpack() end)
 	end
 end
 
@@ -281,11 +282,12 @@ do
 		CloseBankFrame()
 	end
 
-	function bank:Sort()
+	function bank:Sort(isReagentBank)
 		PlaySound(SOUNDKIT.UI_BAG_SORTING_01)
-		SortBankBags()
-		if IsReagentBankUnlocked() then
+		if isReagentBank then
 			SortReagentBankBags()
+		else
+			SortBankBags()
 		end
 	end
 

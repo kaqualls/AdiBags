@@ -58,7 +58,7 @@ local ITEM_SIZE = addon.ITEM_SIZE
 -- Button initialization
 --------------------------------------------------------------------------------
 
-local buttonClass, buttonProto = addon:NewClass("ItemButton", "Button", "ContainerFrameItemButtonTemplate", "ABEvent-1.0")
+local buttonClass, buttonProto = addon:NewClass("ItemButton", "ItemButton", "ContainerFrameItemButtonTemplate", "ABEvent-1.0")
 
 local childrenNames = { "Cooldown", "IconTexture", "IconQuestTexture", "Count", "Stock", "NormalTexture", "NewItemTexture" }
 
@@ -271,7 +271,10 @@ end
 --------------------------------------------------------------------------------
 
 function buttonProto:CanUpdate()
-	return self:IsVisible()
+	if not self:IsVisible() or addon.holdYourBreath then
+		return false
+	end
+	return true
 end
 
 function buttonProto:FullUpdate()
@@ -393,7 +396,7 @@ function buttonProto:UpdateBorder(isolatedEvent)
 		local border = self.IconQuestTexture
 		if texture == true then
 			border:SetVertexColor(1, 1, 1, 1)
-			border:SetTexture(r or 1, g or 1, b or 1, a or 1)
+			border:SetColorTexture(r or 1, g or 1, b or 1, a or 1)
 		else
 			border:SetTexture(texture)
 			border:SetVertexColor(r or 1, g or 1, b or 1, a or 1)
@@ -518,7 +521,7 @@ end
 function stackProto:OnShow()
 	self:RegisterMessage('AdiBags_UpdateAllButtons', 'Update')
 	self:RegisterMessage('AdiBags_PostContentUpdate')
-	--self:RegisterEvent('ITEM_LOCK_CHANGED')
+	self:RegisterEvent('ITEM_LOCK_CHANGED')
 	if self.button then
 		self.button:Show()
 	end

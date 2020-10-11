@@ -45,7 +45,6 @@ local colorSchemes = {
 }
 
 local texts = {}
-local ItemUpgradeInfo = LibStub('LibItemUpgradeInfo-1.0')
 
 local SyLevel = _G.SyLevel
 local SyLevelBypass
@@ -60,7 +59,7 @@ function mod:OnInitialize()
 		profile = {
 			useSyLevel = false,
 			equippableOnly = true,
-			colorScheme = 'original',
+			colorScheme = 'level',
 			minLevel = 1,
 			ignoreJunk = true,
 			ignoreHeirloom = true,
@@ -115,7 +114,8 @@ function mod:UpdateButton(event, button)
 
 	if link then
 		local _, _, quality, _, reqLevel, _, _, _, loc = GetItemInfo(link)
-		local level = ItemUpgradeInfo:GetUpgradedItemLevel(link) or 0 -- Ugly workaround
+		local item = Item:CreateFromBagAndSlot(button.bag, button.slot)
+		local level = item and item:GetCurrentItemLevel() or 0
 		if level >= settings.minLevel
 			and (quality ~= LE_ITEM_QUALITY_POOR or not settings.ignoreJunk)
 			and (loc ~= "" or not settings.equippableOnly)
@@ -314,13 +314,14 @@ do
 	end
 
 	local maxLevelRanges = {
-		[60]  = {  66,  92 },
-		[70]  = { 100, 164 },
-		[80]  = { 187, 284 },
-		[85]  = { 333, 416 },
-		[90]  = { 450, 616 },
-		[100] = { 615, 735 },
-		[110] = { 805, 905 },
+		[ 60] = {  58,  65 }, -- Classic
+		[ 70] = {  80,  94 }, -- The Burning Crusade
+		[ 80] = { 100, 102 }, -- Wrath of the Lich King
+		[ 85] = { 108, 114 }, -- Cataclysm
+		[ 90] = { 116, 130 }, -- Mists of Pandaria
+		[100] = { 136, 143 }, -- Warlords of Draenor
+		[110] = { 164, 250 }, -- Legion
+		[120] = { 400, 485 }, -- Battle for Azeroth
 	}
 
 	local maxLevelColors = {}

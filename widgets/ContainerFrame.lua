@@ -334,7 +334,8 @@ function containerProto:CreateSortButton()
 		"S",
 		10,
 		function()
-			self.bagObject:Sort()
+			addon:CloseAllBags()
+			self.bagObject:Sort(self.isReagentBank)
 			self.forceLayout = true
 		end,
 		L["(Blizzard's) Sort items"]
